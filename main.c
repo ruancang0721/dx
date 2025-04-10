@@ -39,39 +39,55 @@ typedef struct gequ{
         printf("数据已保存!\n");
 
     }
+
     void loaddata()
-    {
+{
         FILE * fp = fopen("data.txt","r");
         if(fp == NULL)
         {
             perror("open file error");
             exit(1);
         }
-        while(!feof(fp))
-        {
-            SONG * song = (SONG*)malloc(sizeof(SONG));
-            if(song == NULL)
-            {
-                perror("malloc error");
-                exit(1);
-            }
-            fscanf(fp,"%s,%s,%lf,%d,%d,%lf\n",song->name,song->singer,&(song->level),&(song->id),&(song->bpm),&(song->score));
-            song->next = NULL;
-            song->prev = NULL;
-            if(head == NULL)
-            {
-                head = song;
-            }
-            else{
-                SONG * p = head;
-                while(p->next!=NULL)
-                {
-                    p = p->next;
-                }
-                p->next = song;
-                song->prev = p;
-                }
+           // 清空现有链表
+    SONG *current = head;
+    while(current != NULL)
+    {
+        SONG *temp = current;
+        current = current->next;
+        free(temp);
     }
+    head = NULL;
+
+ while(1)
+ {
+    SONG * song = (SONG*)malloc(sizeof(SONG));
+    if(song == NULL)
+    {
+        perror("malloc error");
+        exit(1);
+    }
+    int ret = fscanf(fp,"%s,%s,%lf,%d,%d,%lf\n",song->name,song->singer,&(song->level),&(song->id),&(song->bpm),&(song->score));
+    if(ret!= 6)
+    {
+        free(song);
+        break;
+    }
+    song->next = NULL;
+    song->prev = NULL;
+    if(head == NULL)
+    {
+        head = song;
+    }
+    else{
+        SONG * p = head;
+        while(p->next!=NULL)
+        {
+            p = p->next;
+        }
+        p->next = song;
+        song->prev = p;
+    }
+ }
     fclose(fp);
     printf("数据已加载!\n");
     }
@@ -124,30 +140,42 @@ scanf("%lf",&(song->score));
     sleep(1);
 
 }
-void b50(SONG *p) 
+void zhengti(SONG * p)//整体查询
 {
-    while(p!=NULL)
+    printf("1.显示全部数据   2.b50\n");
+    int i = 0;
+    scanf("%d",&i);
+    if(i == 1)
     {
-        printf("%d\t%s\t%s\t%.2lf\t%d\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
-        p = p->next;
+        printf("ID\t名称\t\t歌手\t\t难度\t节拍\t评分\n");
+        while(p!=NULL)
+        {
+            printf("%d\t%s\t%s\t%.2lf\t%d\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
+            p = p->next;
+        
+        }
     }
-} //显示
+}
+void tiaojian(SONG * p)//局部查询
+{
+
+}
 void chaxun()//查询数据
 {
   loaddata();
   SONG * p = head;
   printf("请输入你要查询的方式\n");
   printf("1.整体查询\n");
-  printf("2.局部查询\n");
+  printf("2.条件查询\n");
   int i =0;
   scanf("%d",&i);
-  if(i == 2)
+  if(i == 1)
   {
-     
+     zhengti(p);
   }
   else
   {
-        b50(p);
+     tiaojian(p);
   }
    
 }
@@ -162,43 +190,16 @@ void xiugai()//修改数据
 void tianjia()//插入数据
 {
 
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 void lsmode()  //显示主菜单
 {
-     printf("1.录入数据\n");
-     printf("2.查询数据\n");
+     printf("1.录入数据\t");
+     printf("2.查询数据\t");
      printf("3.删除数据\n");
-     printf("4.修改数据\n");
-     printf("5.插入数据\n");
+     printf("4.修改数据\t");
+     printf("5.插入数据\t");
      printf("6.退出系统\n");
-
-
-
 }
-
-
-
-
-
-
-
 int main()
 {
       int choice =0;
@@ -208,9 +209,6 @@ int main()
           choice =0;
           printf("请输入您的选择：");
           scanf("%d",&choice);
-
-
-
           switch(choice)
           {
             case 1:
