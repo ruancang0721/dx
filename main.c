@@ -152,9 +152,104 @@ scanf("%f",&(song->score));
     sleep(1);
 
 }
+void baobiao(SONG * p)//报表打印
+{
+    if(p == NULL)
+    {
+        perror("没有数据");
+        exit(1);
+    }
+    FILE * fp = fopen("report.txt","w");
+    if(fp == NULL)
+    {
+        perror("open file error");
+        exit(1);
+    }
+    fprintf(fp,"ID\t\t名称\t\t歌手\t\t难度\t\t节拍\t\t评分\n");
+    while(p!=NULL)
+    {
+   fprintf(fp,"%d\t\t%s\t\t%s\t\t%.2lf\t\t%d\t\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
+
+        p = p->next;
+    }
+    fclose(fp);
+    printf("报表已生成!\n");
+}
+void shujutongji(SONG * p)//数据统计
+{
+    int i=0,j=0,k=0;
+    while(p!=NULL)
+    {
+        if(p->score >= 100)
+        {
+            j++;
+        }
+        if(p->level >= 13)
+        {
+            k++;
+        }
+        i++;
+        p=p->next;
+        
+    }
+    printf("共有%d条数据\n",i);
+    printf("有%d条评分大于等于100\n",j);
+    printf("有%d条难度大于等于13级\n",k);
+
+}
+void sort_list(SONG **head, SONG **tail, int order) {
+    if (*head == NULL || (*head)->next == NULL) {
+        return; // 链表为空或只有一个节点，无需排序
+    }
+
+    SONG *sorted = NULL; // 新的有序链表
+    SONG *current = *head;
+
+    while (current != NULL) {
+        SONG *next = current->next; // 保存下一个节点
+        current->next = NULL;       // 将当前节点分离
+        current->prev = NULL;
+
+        // 将当前节点插入到有序链表中
+        if (sorted == NULL) {
+            sorted = current;
+        } else {
+            SONG *i = sorted;
+            SONG *prev = NULL;
+            while (i != NULL && (order * (i->score - current->score)) <= 0) {
+                prev = i;
+                i = i->next;
+            }
+            if (prev == NULL) {
+                current->next = sorted;
+                sorted->prev = current;
+                sorted = current;
+            } else {
+                current->next = prev->next;
+                current->prev = prev;
+                if (prev->next != NULL) {
+                    prev->next->prev = current;
+                }
+                prev->next = current;
+            }
+        }
+
+        current = next; // 移动到下一个节点
+    }
+
+    // 更新头尾指针
+    *head = sorted;
+    *tail = *head;
+    while ((*tail)->next != NULL) {
+        *tail = (*tail)->next;
+    }
+    savedate(*head);
+}
+
+
 void zhengti(SONG * p)//整体查询
 {
-    printf("1.显示全部数据   2.b50\n");
+    printf("1.显示全部数据   2.报表打印 3.数据统计 4.分数排序升序 5.分数排序降序\n");
     int i = 0;
     scanf("%d",&i);
     if(i == 1)
@@ -164,7 +259,35 @@ void zhengti(SONG * p)//整体查询
         {
             printf("%d\t\t%s\t\t%s\t\t%.2lf\t\t%d\t\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
             p = p->next;
-        
+         
+        }
+    }
+    else if(i == 2)
+    {
+        baobiao(p);
+    }
+    else if(i == 3)
+    {
+      shujutongji(p);
+    }
+    else if(i == 4)
+    {
+        sort_list(&head, &tail, 1);
+        printf("ID\t\t名称\t\t歌手\t\t难度\t\t节拍\t\t评分\n");
+        while(p!=NULL)
+        {
+            printf("%d\t\t%s\t\t%s\t\t%.2lf\t\t%d\t\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
+            p = p->next;
+        }
+    }
+    else if(i == 5)
+    {
+         sort_list(&head, &tail, -1);
+        printf("ID\t\t名称\t\t歌手\t\t难度\t\t节拍\t\t评分\n");
+        while(p!=NULL)
+        {
+            printf("%d\t\t%s\t\t%s\t\t%.2lf\t\t%d\t\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
+            p = p->next;
         }
     }
 }
