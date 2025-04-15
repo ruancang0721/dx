@@ -168,7 +168,7 @@ void baobiao(SONG * p)//报表打印
     fprintf(fp,"ID\t\t名称\t\t歌手\t\t难度\t\t节拍\t\t评分\n");
     while(p!=NULL)
     {
-   fprintf(fp,"%d\t\t%s\t\t%s\t\t%.2lf\t\t%d\t\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
+    fprintf(fp,"%d\t\t%s \t\t%s\t\t %.2lf\t\t %d\t\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
 
         p = p->next;
     }
@@ -273,22 +273,13 @@ void zhengti(SONG * p)//整体查询
     else if(i == 4)
     {
         sort_list(&head, &tail, 1);
-        printf("ID\t\t名称\t\t歌手\t\t难度\t\t节拍\t\t评分\n");
-        while(p!=NULL)
-        {
-            printf("%d\t\t%s\t\t%s\t\t%.2lf\t\t%d\t\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
-            p = p->next;
-        }
+        printf("数据已排序！\n");
     }
     else if(i == 5)
     {
          sort_list(&head, &tail, -1);
-        printf("ID\t\t名称\t\t歌手\t\t难度\t\t节拍\t\t评分\n");
-        while(p!=NULL)
-        {
-            printf("%d\t\t%s\t\t%s\t\t%.2lf\t\t%d\t\t%.2lf\n",p->id,p->name,p->singer,p->level,p->bpm,p->score);
-            p = p->next;
-        }
+         printf("数据已排序！\n");
+
     }
 }
 void gequname(SONG * p)//歌曲名查询
